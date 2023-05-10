@@ -1,6 +1,20 @@
-![](C:\Users\killa\AppData\Roaming\Typora\typora-user-images\image-20230508225510425.png)
+![](C:\gitcode\the-notes-of-itheima\Image\Map.png)
 
 红色为接口，蓝色为实现类
+
+Map是双列集合的顶层接口，它的功能是全部双列集合都可以继承使用的
+
+| 方法名称                     | 说明                                 |
+| :--------------------------- | :----------------------------------- |
+| put(key,value)               | 添加元素                             |
+| remove(key)                  | 根据键删除键值对元素                 |
+| void clear()                 | 移除所有的键值对元素                 |
+| boolean containsKey(key)     | 判断集合是否包含指定的键             |
+| boolean containsValue(value) | 判断集合是否包含指定的值             |
+| boolean isEmpty()            | 判断集合是否为空                     |
+| int size()                   | 集合的长度，也就是集合中键值对的个数 |
+
+
 
 #### Map集合的第一种遍历方式（键找值）
 
