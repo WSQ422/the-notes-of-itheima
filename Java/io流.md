@@ -573,7 +573,7 @@ public class demo1 {
 
   > 1 指定字符集读写（已淘汰）
   >
-  > 2 字节流想要使用字符流中的方法
+  > 2 字节流想要使用字符流中的方法（将字节流转换为字符流）
 
 代码示例：
 
@@ -808,5 +808,102 @@ public class demo1 {
         fis.close();
     }
 }
+```
+
+### 工具包（Commons-io）
+
+Commons-io是apache开源基金组织提供的一组有关IO操作的开源工具包
+
++ 作用：提高IO流的开发效率
+
++ 使用步骤：
+
+  > 1 在项目中创建一个文件夹：lib
+  >
+  > 2 将jar包复制粘贴到lib文件夹
+  >
+  > 3 右键点击jar包，选择Add as Library ->点击OK
+  >
+  > 4 在类中导包使用
+
++ 常见方法：
+
+  
+
+| FileUtils类（文件/文件夹相关）                               | 说明                         |
+| ------------------------------------------------------------ | ---------------------------- |
+| static void copyFile(File srcFile,File destFile)             | 复制文件                     |
+| static void copyDirectory(File srcDir,File destDir)          | 复制文件夹(里面的内容)       |
+| static void copyDirectoryToDirectory(File srcDir,File destDir) | 复制文件夹（原封不动的复制） |
+| static void deleteDirectory(File directory)                  | 删除文件夹                   |
+| static void cleanDirectory(File directory)                   | 清空文件夹                   |
+| static String readFileToString(File file,Charset encoding)   | 读取文件中的数据变成字符串   |
+| static void write(File file,CharSequence data,String encoding) | 写出数据                     |
+
+| IOUtils类（流相关）                                          | 说明       |
+| ------------------------------------------------------------ | ---------- |
+| public static int copy(InputStream input,OutoutStream output) | 复制文件   |
+| public static int copyLarge(Reader input,Writer output)      | 复制大文件 |
+| public static String readLines(Reader input)                 | 读取数据   |
+| public static void writer(String data,OutputStream output)   | 写出数据   |
+
+### 工具包（Hutool）
+
+| 相关类            | 说明                          |
+| ----------------- | ----------------------------- |
+| IoUtil            | 流操作工具类                  |
+| FileUtil          | 文件读写和操作的工具类        |
+| FileTypeUtil      | 文件类型判断工具类            |
+| WatchMonitor      | 目录、文件监听                |
+| ClassPathResource | 针对ClassPath中资源的访问封装 |
+| FileReader        | 封装文件读取                  |
+| FileWriter        | 封装文件写入                  |
+
+### 综合练习
+
+#### 网络爬虫
+
+```java
+public class demo1 {
+    public static void main(String[] args) throws IOException {
+        //1 定义变量记录网址
+        String fn = "https://hanyu.baidu.com/shici/detail?from=kg1&highlight=&pid=0b2f26d4c0ddb3ee693fdb1137ee1b0d&srcid=51369";
+        //2 爬取网站数据
+        String s = webCrawler(fn);
+        //3 通过正则表达式，把其中符合要求的数据获取出来
+        ArrayList<String> temp = getData(s, "(.{4})(，|。)", 1);
+        //4 打印最终结果
+        System.out.println(temp);
+    }
+    private static ArrayList<String> getData(String fn, String regex, int index) {
+        //1 创建集合存放数据
+        ArrayList<String> list = new ArrayList<>();
+        //2 按照正则表达式规则去处理数据
+        Pattern pattern = Pattern.compile(regex);//compile方法用于将一个字符串编译成正则表达式对象
+        Matcher matcher = pattern.matcher(fn);//matcher方法用于在指定的字符串中查找与正则表达式匹配的部分，返回一个Matcher对象
+        while (matcher.find()) {
+            list.add(matcher.group(index));
+        }
+        return list;
+    }
+    public static String webCrawler(String net) throws IOException {
+        //1 定义拼接爬取到的数据
+        StringBuilder sb = new StringBuilder();
+        //2 创建一个URL对象
+        URL url = new URL(net);
+        //3 链接上这个网址
+        URLConnection conn = url.openConnection();
+        //4 读取数据
+        InputStream inputStream = conn.getInputStream();//通过getInputStream方法创建一个字节流对象
+        InputStreamReader isr = new InputStreamReader(inputStream);//然后通过转换流把字节流转化成字符流来处理汉字
+        int ch;
+        while ((ch = isr.read()) != -1) {
+            sb.append((char) ch);
+        }
+        //5 释放资源
+        isr.close();
+        //6 把读取到的数据返回
+        return sb.toString();
+    }
 ```
 
